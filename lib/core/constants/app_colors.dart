@@ -83,8 +83,13 @@ class AppColors {
           ? textSecondary
           : const Color(0xFF5A5670);
 
-  static Color card(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? darkCard : Colors.white;
+  static Color card(BuildContext context) {
+    final surface = Theme.of(context).colorScheme.surface;
+    if (Theme.of(context).brightness == Brightness.light) {
+      return Color.lerp(surface, Colors.white, 0.35) ?? Colors.white;
+    }
+    return Color.lerp(surface, Colors.white, 0.1) ?? darkCard;
+  }
 
   static Color line(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark

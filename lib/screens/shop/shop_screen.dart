@@ -381,42 +381,116 @@ class _DeskPaper extends StatelessWidget {
   Widget build(BuildContext context) {
     final owned = shop.ownsItem(item.id);
     final active = _ShopActions.isActive(shop, item);
+    final preset =
+        item.type == ShopItemType.theme ? AppThemePresets.get(item.id) : null;
+    final preview = preset != null && preset.isPremium;
+    final titleColor = preview ? Colors.white : AppColors.ink(context);
+    final descColor =
+        preview ? Colors.white.withValues(alpha: 0.78) : AppColors.muted(context);
+
+    final content = Padding(
+      padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (preview) ...[
+            Row(
+              children: [
+                _Swatch(preset.primary),
+                const SizedBox(width: 6),
+                _Swatch(preset.primaryLight),
+                const SizedBox(width: 6),
+                _Swatch(preset.glowColor),
+              ],
+            ),
+            const SizedBox(height: 12),
+          ],
+          Text(
+            AppStrings.t(context, item.nameKey),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.nunito(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: titleColor,
+                height: 1.2),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            AppStrings.t(context, item.descKey),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.nunito(
+                fontSize: 13,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+                color: descColor),
+          ),
+          const Spacer(),
+          _Seal(item: item, shop: shop, owned: owned, active: active),
+        ],
+      ),
+    );
+
+    if (preview) {
+      return SizedBox.expand(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: owned && _ShopActions.canApply(item) && !active
+                ? () => _ShopActions.apply(context, shop, item)
+                : null,
+            borderRadius: BorderRadius.circular(22),
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: preset.shopPreviewGradient,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(
+                    color: preset.glowColor.withValues(alpha: 0.55), width: 1.4),
+                boxShadow: [
+                  BoxShadow(
+                    color: preset.glowColor.withValues(alpha: 0.28),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: content,
+            ),
+          ),
+        ),
+      );
+    }
 
     return SizedBox.expand(
       child: LumenPaper(
         fill: paper,
-        padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+        padding: EdgeInsets.zero,
         onTap: owned && _ShopActions.canApply(item) && !active
             ? () => _ShopActions.apply(context, shop, item)
             : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppStrings.t(context, item.nameKey),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.nunito(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.ink(context),
-                  height: 1.2),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              AppStrings.t(context, item.descKey),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.nunito(
-                  fontSize: 13,
-                  height: 1.35,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.muted(context)),
-            ),
-            const Spacer(),
-            _Seal(item: item, shop: shop, owned: owned, active: active),
-          ],
-        ),
+        child: content,
+      ),
+    );
+  }
+}
+
+class _Swatch extends StatelessWidget {
+  final Color color;
+  const _Swatch(this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 18,
+      height: 18,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.45)),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.55), blurRadius: 8),
+        ],
       ),
     );
   }

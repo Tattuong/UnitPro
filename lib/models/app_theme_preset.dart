@@ -31,12 +31,13 @@ class FtrTheme extends ThemeExtension<FtrTheme> {
 
   factory FtrTheme.fromPreset(AppThemePreset preset, {bool isDark = true}) {
     final surface = isDark ? preset.darkSurface : preset.surface;
+    final lift = preset.isPremium ? 0.14 : 0.08;
     final surfaceElevated = isDark
-        ? (Color.lerp(preset.darkSurface, Colors.white, 0.08) ??
+        ? (Color.lerp(preset.darkSurface, preset.isPremium ? preset.primary : Colors.white, lift) ??
             preset.darkSurface)
         : (Color.lerp(preset.surface, Colors.white, 0.12) ?? preset.surface);
-    final border = Color.lerp(preset.primary, surface, isDark ? 0.55 : 0.72)
-            ?.withValues(alpha: isDark ? 0.55 : 0.35) ??
+    final border = Color.lerp(preset.primary, surface, preset.isPremium ? 0.35 : (isDark ? 0.55 : 0.72))
+            ?.withValues(alpha: preset.isPremium ? 0.7 : (isDark ? 0.55 : 0.35)) ??
         AppColors.border;
     return FtrTheme(
       primary: preset.primary,
@@ -44,7 +45,11 @@ class FtrTheme extends ThemeExtension<FtrTheme> {
       surface: surface,
       surfaceElevated: surfaceElevated,
       border: border,
-      navBar: isDark ? AppColors.navBar : Colors.white,
+      navBar: isDark
+          ? (preset.isPremium
+              ? (Color.lerp(const Color(0xFF0A0A0C), preset.primary, 0.16) ?? AppColors.navBar)
+              : AppColors.navBar)
+          : Colors.white,
       navActive: preset.primary,
       glowColor: preset.glowColor,
       balanceGradient: preset.balanceGradient,
@@ -345,79 +350,79 @@ class AppThemePresets {
 
   static const emerald = AppThemePreset(
     id: 'theme_emerald',
-    primary: Color(0xFF6B7F5A),
-    primaryLight: Color(0xFFC5CDB4),
-    background: Color(0xFFF3F0E6),
-    surface: Color(0xFFF8F6EE),
-    darkBackground: Color(0xFF121410),
-    darkSurface: Color(0xFF1A1C16),
-    glowColor: Color(0xFFA8B89A),
+    primary: Color(0xFF2DD4BF),
+    primaryLight: Color(0xFF5EEAD4),
+    background: Color(0xFFECFDF8),
+    surface: Color(0xFFF0FDFA),
+    darkBackground: Color(0xFF020807),
+    darkSurface: Color(0xFF0B1C18),
+    glowColor: Color(0xFF2DD4BF),
     headerGradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFFE8E6D8), Color(0xFFF3F0E6)],
+      colors: [Color(0xFF06302A), Color(0xFF020807)],
     ),
     balanceGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFC5CDB4), Color(0xFF6B7F5A)],
+      colors: [Color(0xFF99F6E4), Color(0xFF2DD4BF), Color(0xFF0F766E)],
     ),
     shopPreviewGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF2A2E24), Color(0xFF6B7F5A), Color(0xFFC5CDB4)],
+      colors: [Color(0xFF042F2E), Color(0xFF115E59), Color(0xFF2DD4BF)],
     ),
   );
 
   static const gold = AppThemePreset(
     id: 'theme_gold',
-    primary: Color(0xFFC48A2A),
-    primaryLight: Color(0xFFE8C56A),
-    background: Color(0xFFF8EEDC),
-    surface: Color(0xFFFFF6E8),
-    darkBackground: Color(0xFF12100C),
-    darkSurface: Color(0xFF1C1914),
-    glowColor: Color(0xFFE4D2A4),
+    primary: Color(0xFFF5C542),
+    primaryLight: Color(0xFFFFE08A),
+    background: Color(0xFFFFF7E8),
+    surface: Color(0xFFFFFBEB),
+    darkBackground: Color(0xFF0A0803),
+    darkSurface: Color(0xFF1C1608),
+    glowColor: Color(0xFFFFD56A),
     headerGradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFFECE4D6), Color(0xFFF6F0E4)],
+      colors: [Color(0xFF3A2A0A), Color(0xFF0A0803)],
     ),
     balanceGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFF0E2B8), Color(0xFFC6A46A), Color(0xFF8F7544)],
+      colors: [Color(0xFFFFF1C2), Color(0xFFF5C542), Color(0xFFB45309)],
     ),
     shopPreviewGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF2A2218), Color(0xFFC6A46A), Color(0xFFF0E2B8)],
+      colors: [Color(0xFF2A1C06), Color(0xFF854D0E), Color(0xFFF5C542)],
     ),
   );
 
   static const midnight = AppThemePreset(
     id: 'theme_midnight',
-    primary: Color(0xFF8A8178),
-    primaryLight: Color(0xFFD4CBC0),
-    background: Color(0xFFF2EFEA),
-    surface: Color(0xFFF7F4F0),
-    darkBackground: Color(0xFF141210),
-    darkSurface: Color(0xFF1E1B18),
-    glowColor: Color(0xFFC4BBB0),
+    primary: Color(0xFFC084FC),
+    primaryLight: Color(0xFFE9D5FF),
+    background: Color(0xFFF5F0FF),
+    surface: Color(0xFFFAF5FF),
+    darkBackground: Color(0xFF07040F),
+    darkSurface: Color(0xFF161022),
+    glowColor: Color(0xFFD8B4FE),
     headerGradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFFE6E2DC), Color(0xFFF2EFEA)],
+      colors: [Color(0xFF2E1064), Color(0xFF07040F)],
     ),
     balanceGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFD4CBC0), Color(0xFF8A8178)],
+      colors: [Color(0xFFE9D5FF), Color(0xFFC084FC), Color(0xFF7C3AED)],
     ),
     shopPreviewGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1A1816), Color(0xFF4A4540), Color(0xFFD4CBC0)],
+      colors: [Color(0xFF1E0B3A), Color(0xFF6D28D9), Color(0xFFC084FC)],
     ),
   );
 

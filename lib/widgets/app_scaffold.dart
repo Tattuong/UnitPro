@@ -30,30 +30,38 @@ class FtrBackground extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
-                    ftr.glowColor.withValues(alpha: 0.1),
+                    ftr.glowColor.withValues(alpha: 0.22),
                     Colors.transparent,
-                    ftr.primary.withValues(alpha: 0.06),
+                    ftr.primary.withValues(alpha: 0.16),
+                    ftr.glowColor.withValues(alpha: 0.08),
                   ],
-                  stops: const [0.0, 0.45, 1.0],
+                  stops: const [0.0, 0.32, 0.72, 1.0],
                 ),
               ),
             ),
           ),
           Positioned(
-            top: -90,
-            right: -70,
+            top: -110,
+            right: -80,
             child: IgnorePointer(
-              child: GlowOrb(color: ftr.glowColor.withValues(alpha: 0.32), size: 280),
+              child: GlowOrb(color: ftr.glowColor.withValues(alpha: 0.48), size: 320),
             ),
           ),
           Positioned(
-            bottom: 72,
-            left: -80,
+            top: 120,
+            left: -90,
             child: IgnorePointer(
-              child: GlowOrb(color: ftr.primaryLight.withValues(alpha: 0.2), size: 220),
+              child: GlowOrb(color: ftr.primary.withValues(alpha: 0.28), size: 240),
+            ),
+          ),
+          Positioned(
+            bottom: 48,
+            right: -40,
+            child: IgnorePointer(
+              child: GlowOrb(color: ftr.primaryLight.withValues(alpha: 0.26), size: 200),
             ),
           ),
         ],
